@@ -1,6 +1,7 @@
 package com.hmall.cart.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hmall.api.client.ItemClient;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +48,9 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
 
     private final CartProperties cartProperties;
 
+    @Resource
+    private CartMapper cartMapper;
+
     @Override
     public void addItem2Cart(CartFormDTO cartFormDTO) {
         // 1.获取登录用户
@@ -72,7 +77,11 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
     @Override
     public List<CartVO> queryMyCarts() {
         // 1.查询我的购物车列表
-        List<Cart> carts = lambdaQuery().eq(Cart::getUserId,  UserContext.getUser()).list();
+
+        QueryWrapper<Cart> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(Cart::getUserId, UserContext.getUser());
+        List<Cart> carts = cartMapper.selectList(queryWrapper);
+
         if (CollUtils.isEmpty(carts)) {
             return CollUtils.emptyList();
         }
@@ -149,7 +158,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
         int count = lambdaQuery().eq(Cart::getUserId, userId).count();
         if (count >= cartProperties.getMaxItems()) {
             throw new BizIllegalException(
-                    StrUtil.format("用户购物车课程不能超过{}", cartProperties.getMaxItems()));
+                    StrUtil.format("用户购物车商品数量不能超过{}", cartProperties.getMaxItems()));
         }
     }
 

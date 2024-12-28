@@ -1,6 +1,6 @@
 spring:
   application:
-    name: trade-service # 微服务名称
+    name: pay-service # 微服务名称
   profiles:
     active: dev
   cloud:
@@ -14,3 +14,9 @@ spring:
           - data-id: shared-swagger.yaml
           - data-id: shared-seata.yaml
           - data-id: shared-feign.yaml
+#      discovery:
+#        namespace: "161b16fe-1b06-4c7a-85a7-817d5253c766"
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://127.0.0.1:10086/eureka

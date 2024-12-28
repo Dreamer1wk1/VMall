@@ -1,5 +1,6 @@
 package com.hmall.user.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hmall.common.exception.BadRequestException;
 import com.hmall.common.exception.BizIllegalException;
@@ -19,6 +20,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import javax.annotation.Resource;
+
 /**
  * <p>
  * 用户表 服务实现类
@@ -37,20 +40,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     private final JwtProperties jwtProperties;
 
+    @Resource
+    private UserMapper userMapper;
+
     @Override
     public UserLoginVO login(LoginFormDTO loginDTO) {
         // 1.数据校验
         String username = loginDTO.getUsername();
         String password = loginDTO.getPassword();
         // 2.根据用户名或手机号查询
-        User user = lambdaQuery().eq(User::getUsername, username).one();
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", username);
+        User user = userMapper.selectOne(queryWrapper);
+        Assert.notNull(user, "用户名错误");
+
         Assert.notNull(user, "用户名错误");
         // 3.校验是否禁用
         if (user.getStatus() == UserStatus.FROZEN) {
             throw new ForbiddenException("用户被冻结");
         }
         // 4.校验密码
-        if (!passwordEncoder.matches(password, user.getPassword())) {
+        if (!password.equals(user.getPassword())) {
             throw new BadRequestException("用户名或密码错误");
         }
         // 5.生成TOKEN
@@ -69,7 +79,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         log.info("开始扣款");
         // 1.校验密码
         User user = getById(UserContext.getUser());
-        if(user == null || !passwordEncoder.matches(pw, user.getPassword())){
+        if (user == null || !passwordEncoder.matches(pw, user.getPassword())) {
             // 密码错误
             throw new BizIllegalException("用户密码错误");
         }
