@@ -2,8 +2,8 @@ server:
   port: 8082
   tomcat:
     threads:
-      max: 25
-    accept-count: 25
+      max: 50
+    accept-count: 50
     max-connections: 100
 #  sentinel:
 #    enabled: true
@@ -17,5 +17,4 @@ spring:
   cloud:
     sentinel:
       transport:
-        dashboard: localhost:8090 # sentinel的控制台地址
-      http-method-specify: true # 是否设置请求方式作为资源名称
+        dashboard: localhost:8090

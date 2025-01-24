@@ -12,7 +12,7 @@ hm:
     location: classpath:hmall.jks
     alias: hmall
     password: hmall123
-    tokenTTL: 30m
+    tokenTTL: 300m
   db:
     database: hm-user
   swagger:

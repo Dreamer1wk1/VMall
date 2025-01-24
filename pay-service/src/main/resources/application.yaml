@@ -13,6 +13,7 @@ hm:
   swagger:
     title: "黑马商城支付服务接口文档"
     package: com.hmall.pay.controller
+
 spring:
   cloud:
     sentinel:
