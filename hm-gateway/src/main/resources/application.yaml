@@ -12,3 +12,4 @@ hm:
       - /users/login
       - /items/**
       - /hi
+      - /es_search/**

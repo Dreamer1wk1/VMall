@@ -1,0 +1,14 @@
+server:
+  port: 8087
+
+hm:
+  db:
+    database: hm-item
+  swagger:
+    title: "黑马商城商品服务接口文档"
+    package: com.hmall.search.controller
+
+elasticsearch:
+  port: 9200
+  host: 192.168.123.136
+

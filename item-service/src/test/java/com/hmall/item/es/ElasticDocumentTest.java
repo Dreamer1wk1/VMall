@@ -90,9 +90,9 @@ public class ElasticDocumentTest {
         int pageNo = 1, pageSize = 500;
         while (true) {
             // 1.准备文档数据
-            Page<Item> page = itemService.lambdaQuery()
-                    .eq(Item::getStatus, 1)
-                    .page(Page.of(pageNo, pageSize));
+            Page<Item> page = itemService.query()
+                    .eq("status", 1)
+                    .page(new Page<>(pageNo, pageSize));
             List<Item> records = page.getRecords();
             if(records == null || records.isEmpty()){
                 return;
@@ -116,7 +116,7 @@ public class ElasticDocumentTest {
     @BeforeEach
     void setUp() {
         client = new RestHighLevelClient(RestClient.builder(
-                HttpHost.create("http://192.168.150.101:9200")
+                HttpHost.create("http://192.168.123.136:9200")
         ));
     }
 
