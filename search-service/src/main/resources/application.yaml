@@ -10,5 +10,5 @@ hm:
 
 elasticsearch:
   port: 9200
-  host: 192.168.123.136
+  host: 192.168.123.138
 

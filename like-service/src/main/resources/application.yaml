@@ -1,0 +1,57 @@
+server:
+  port: 8090
+  tomcat:
+    threads:
+      max: 50
+    accept-count: 50
+    max-connections: 100
+#  sentinel:
+#    enabled: true
+hm:
+  db:
+    database: hm-like
+  swagger:
+    title: "点赞服务接口文档"
+    package: com.hmall.like.controller
+
+spring:
+  redis:
+    port: 6378
+    host: 192.168.123.140
+  cloud:
+    sentinel:
+      transport:
+        dashboard: localhost:8090
+  shardingsphere:
+    datasource:
+      names: ds0
+      ds0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://192.168.123.140:3306/hm-like?serverTimezone=UTC
+        username: root
+        password: 123
+    rules:
+      sharding:
+        tables:
+          like_record:
+            actual-data-nodes: ds0.like_${1..2}
+            table-strategy:
+              standard:
+                sharding-column: id
+                sharding-algorithm-name: inline_algorithm
+        sharding-algorithms:
+          inline_algorithm:
+            type: INLINE
+            props:
+              algorithm-expression: like_${id % 2 + 1}
+
+rocketmq:
+  name-server: 192.168.123.140:9876
+  producer:
+    group: producer_group
+  consumer:
+    likeRecord:
+      group: like_record_consumer_group
+
+

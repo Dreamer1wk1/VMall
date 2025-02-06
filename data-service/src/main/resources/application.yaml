@@ -1,0 +1,21 @@
+server:
+  port: 8088
+
+hm:
+  db:
+    database: hm-item
+  swagger:
+    title: "黑马商城商品服务接口文档"
+    package: com.hmall.data.controller
+
+elasticsearch:
+  port: 9200
+  host: 192.168.123.138
+
+rocketmq:
+  name-server: 192.168.123.138:9876
+  producer:
+    group: producer_group
+  consumer:
+    dataSync:
+      group: data_consumer_group
